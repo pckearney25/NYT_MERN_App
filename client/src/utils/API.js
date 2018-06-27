@@ -2,8 +2,19 @@ import axios from "axios";
 
 export default {
   // Gets all books
-  getArticles: function() {
-    return axios.get("/api/books");
+  searchNYTimes: (topic, startDate, endDate) => {
+    const apiKey = "9687a0cdbd11479386b098e326eb223c";
+    const queryURL =
+      "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" +
+      apiKey +
+      "&q=" +
+      topic +
+      "&begin_date=" +
+      startDate +
+      "&end_date=" +
+      endDate;
+    console.log(queryURL);
+    return axios.get(queryURL);
   }
   // Gets the book with the given id
   //getBook: function(id) {
