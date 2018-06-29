@@ -15,17 +15,22 @@ export default {
       endDate;
     console.log(queryURL);
     return axios.get(queryURL);
-  }
+  },
+
+  getSavedArticles: function() {
+    return axios.get("/api/articles");
+  },
   // Gets the book with the given id
   //getBook: function(id) {
   // return axios.get("/api/books/" + id);
   //},
-  // Deletes the book with the given id
-  //deleteBook: function(id) {
-  //return axios.delete("/api/books/" + id);
-  //},
-  // Saves a book to the database
-  //saveBook: function(bookData) {
-  //return axios.post("/api/books", bookData);
-  //}
+  // Deletes the article with the given id
+  deleteArticle: function(id) {
+    console.log("ID: " + id);
+    return axios.delete("/api/articles/" + id);
+  },
+  //Saves an article to the database
+  saveArticle: function(articleData) {
+    return axios.post("/api/articles", articleData);
+  }
 };

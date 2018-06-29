@@ -11,26 +11,35 @@ import "./Home.css";
 class Home extends Component {
   state = {
     articles: [],
-    savedArticles: [
-      {
-        headline: "Trump’s ‘Obsession With Obama’",
-        snippet:
-          "“Lacking the grace, skill, empathy, humor, work ethic, knowledge, tact, thick skin and fitness for the job,” the president envies his predecessor.",
-        web_url: "https://www.nytimes.com/2017/10/18/opinion/trump-obama.html",
-        pub_date: "2017-10-18T18:55:03+0000"
-      },
-      {
-        headline: "Revenge of the Obama Coalition",
-        snippet:
-          "The resistance is transforming local politics. But it probably won’t stop there.",
-        web_url:
-          "https://www.nytimes.com/2017/11/10/opinion/democrats-election-obama-coalition.html",
-        pub_date: "2017-11-10T10:45:25+0000"
-      }
-    ],
+    savedArticles: [],
     topic: "",
     startDate: "",
     endDate: ""
+  };
+
+  componentDidMount() {
+    this.loadSavedArticles();
+  }
+
+  loadSavedArticles = () => {
+    API.getSavedArticles()
+      .then(res => {
+        console.log(res.data);
+        this.setState({ savedArticles: res.data });
+      })
+      .catch(err => console.log(err));
+  };
+
+  deleteArticle = id => {
+    API.deleteArticle(id)
+      .then(res => this.loadSavedArticles())
+      .catch(err => console.log(err));
+  };
+
+  saveArticle = articleData => {
+    API.saveArticle(articleData)
+      .then(res => this.loadSavedArticles())
+      .catch(err => console.log(err));
   };
 
   handleInputChange = event => {
@@ -44,7 +53,7 @@ class Home extends Component {
   };
 
   handleFormSubmit = event => {
-    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
+    // When the form is submitted, prevent its default behavior, get articles, update the articles state
     event.preventDefault();
     //this.setState({
     //articles: []
@@ -65,6 +74,7 @@ class Home extends Component {
           );
           while (i < results.data.response.docs.length || i < 10) {
             searchRecord = {
+              _id: i,
               headline: results.data.response.docs[i].headline.main,
               snippet: results.data.response.docs[i].snippet,
               web_url: results.data.response.docs[i].web_url,
@@ -124,7 +134,7 @@ class Home extends Component {
                         type="primary"
                         className="input-lg"
                       >
-                        Search{" "}
+                        Search
                       </Button>
                     </Col>
                   </Row>
@@ -144,11 +154,14 @@ class Home extends Component {
               {this.state.articles.map(article => {
                 return (
                   <SearchListItem
-                    key={article.headline}
+                    key={article._id}
+                    articles={this.state.articles}
+                    _id={article._id}
                     headline={article.headline}
                     snippet={article.snippet}
-                    href={article.web_url}
+                    web_url={article.web_url}
                     pub_date={article.pub_date}
+                    saveArticle={this.saveArticle}
                   />
                 );
               })}
@@ -157,19 +170,27 @@ class Home extends Component {
         </Container>
         <Container className="savedContainer">
           <h4> Saved Articles: </h4>
-          <SavedList>
-            {this.state.savedArticles.map(article => {
-              return (
-                <SavedListItem
-                  key={article.headline}
-                  headline={article.headline}
-                  snippet={article.snippet}
-                  href={article.web_url}
-                  pub_date={article.pub_date}
-                />
-              );
-            })}
-          </SavedList>
+          {!this.state.savedArticles.length ? (
+            <h6 className="text-left">
+              Currently there are no saved articles to display.
+            </h6>
+          ) : (
+            <SavedList>
+              {this.state.savedArticles.map(saved => {
+                return (
+                  <SavedListItem
+                    key={saved._id}
+                    _id={saved._id}
+                    headline={saved.headline}
+                    snippet={saved.snippet}
+                    web_url={saved.web_url}
+                    pub_date={saved.pub_date}
+                    deleteArticle={this.deleteArticle}
+                  />
+                );
+              })}
+            </SavedList>
+          )}
         </Container>
       </div>
     );

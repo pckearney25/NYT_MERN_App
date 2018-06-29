@@ -2,9 +2,10 @@ import React from "react";
 import "./Jumbotron.css";
 
 const Jumbotron = () => (
-  <div className="jumbotron text-center">
-    <h1>New York Times Article Scrubber</h1>
+  <div>
+    <div className="jumbotron text-center" />
     <a
+      className="react-link"
       target="_blank"
       rel="noopener noreferrer"
       href="https://developer.nytimes.com/"
