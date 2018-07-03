@@ -5,6 +5,7 @@ const routes = require("./routes");
 const logger = require("morgan");
 const app = express();
 const PORT = process.env.PORT || 3001;
+const bluebird = require("bluebird");
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
@@ -18,9 +19,10 @@ app.use(express.static("client/build"));
 app.use(routes);
 
 // Connect to the Mongo DB
-mongoose.Promise = Promise;
+mongoose.Promise = bluebird;
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/nytimes_MERNDB"
+  process.env.MONGODB_URI || "mongodb://localhost/nytimes_MERN_PASSPORTDB",
+  { promiseLibrary: bluebird }
 );
 
 // Start the API server
