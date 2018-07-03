@@ -5,6 +5,7 @@ import Button from "../../components/Button";
 import { Container, Row, Col } from "../../components/Grid";
 import { SearchList, SearchListItem } from "../../components/SearchList/";
 import { SavedList, SavedListItem } from "../../components/SavedList/";
+import axios from "axios";
 import API from "../../utils/API";
 import "./Home.css";
 
@@ -18,6 +19,10 @@ class Home extends Component {
   };
 
   componentDidMount() {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwtToken"
+    );
+
     this.loadSavedArticles();
   }
 
@@ -27,16 +32,27 @@ class Home extends Component {
         console.log(res.data);
         this.setState({ savedArticles: res.data });
       })
-      .catch(err => console.log(err));
+      .catch(error => {
+        if (error.response.status === 401) {
+          //Again, what is going on  here???
+          this.props.history.push("/login");
+        }
+      });
   };
 
   deleteArticle = id => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwtToken"
+    );
     API.deleteArticle(id)
       .then(res => this.loadSavedArticles())
       .catch(err => console.log(err));
   };
 
   saveArticle = articleData => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwtToken"
+    );
     API.saveArticle(articleData)
       .then(res => this.loadSavedArticles())
       .catch(err => console.log(err));
@@ -55,9 +71,9 @@ class Home extends Component {
   handleFormSubmit = event => {
     // When the form is submitted, prevent its default behavior, get articles, update the articles state
     event.preventDefault();
-    //this.setState({
-    //articles: []
-    //});
+    this.setState({
+      articles: []
+    });
 
     API.searchNYTimes(
       this.state.topic,
@@ -94,6 +110,11 @@ class Home extends Component {
       endDate: ""
     });
     console.log(this.state.articles);
+  };
+
+  logout = () => {
+    localStorage.removeItem("jwtToken");
+    window.location.reload();
   };
 
   render() {
@@ -191,6 +212,12 @@ class Home extends Component {
               })}
             </SavedList>
           )}
+        </Container>
+        <Container>
+          <h4> Leave Application: </h4>
+          <button className="btn btn-primary" onClick={this.logout}>
+            Logout
+          </button>
         </Container>
       </div>
     );

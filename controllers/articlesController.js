@@ -16,7 +16,7 @@ getToken = function(headers) {
 // Defining methods for the articlesController
 module.exports = {
   findAll: function(req, res) {
-    var token = getToken(req.headers);
+    const token = getToken(req.headers);
     if (token) {
       db.Article.find(req.query)
         //.sort({ date: -1 })
@@ -27,7 +27,7 @@ module.exports = {
     }
   },
   findById: function(req, res) {
-    var token = getToken(req.headers);
+    const token = getToken(req.headers);
     if (token) {
       db.Article.findById(req.params.id)
         .then(dbModel => res.json(dbModel))
@@ -37,6 +37,7 @@ module.exports = {
     }
   },
   create: function(req, res) {
+    const token = getToken(req.headers);
     if (token) {
       db.Article.create(req.body)
         .then(dbModel => res.json(dbModel))
@@ -47,6 +48,7 @@ module.exports = {
   },
 
   remove: function(req, res) {
+    const token = getToken(req.headers);
     if (token) {
       console.log(req.params.id);
       db.Article.findById({ _id: req.params.id })

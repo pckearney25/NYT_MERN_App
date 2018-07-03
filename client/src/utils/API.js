@@ -20,11 +20,8 @@ export default {
   getSavedArticles: function() {
     return axios.get("/api/articles");
   },
-  // Gets the book with the given id
-  //getBook: function(id) {
-  // return axios.get("/api/books/" + id);
-  //},
-  // Deletes the article with the given id
+
+  // Deletes the article with the given id.
   deleteArticle: function(id) {
     console.log("ID: " + id);
     return axios.delete("/api/articles/" + id);
@@ -32,5 +29,13 @@ export default {
   //Saves an article to the database
   saveArticle: function(articleData) {
     return axios.post("/api/articles", articleData);
+  },
+  //checks login credentials against database.
+  loginSubmit: function(loginData) {
+    return axios.post("/api/auth/login", loginData);
+  },
+  //registers a new user into the database.
+  regsterSubmit: function(registerData) {
+    return axios.post("/api/auth/register", registerData);
   }
 };
