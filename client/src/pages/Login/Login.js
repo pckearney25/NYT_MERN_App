@@ -34,7 +34,7 @@ class Login extends Component {
       .catch(error => {
         if (error.response.status === 401) {
           this.setState({
-            message: "Login failed. Username or password not match"
+            message: error.response.data.msg
           });
         }
       });
@@ -57,6 +57,7 @@ class Login extends Component {
           <input
             type="email"
             className="form-control"
+            id="inputEmail"
             placeholder="Email address"
             name="username"
             value={username}
@@ -69,6 +70,7 @@ class Login extends Component {
           <input
             type="password"
             className="form-control"
+            id="inputPassword"
             placeholder="Password"
             name="password"
             value={password}

@@ -8,12 +8,13 @@ class Create extends Component {
   //this.
   state = {
     username: "",
-    password: ""
+    password: "",
+    message: ""
   };
   //}
-  onChange = e => {
+  onChange = event => {
     const state = this.state;
-    state[e.target.name] = e.target.value;
+    state[event.target.name] = event.target.value;
     this.setState(state);
   };
 
@@ -21,15 +22,24 @@ class Create extends Component {
     event.preventDefault();
     const { username, password } = this.state;
     API.registerSubmit({ username, password }).then(result => {
-      this.props.history.push("/login");
+      if (result.data.success) {
+        this.props.history.push("/login");
+      } else {
+        this.setState({ message: result.data.msg });
+      }
     });
   };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, message } = this.state;
     return (
       <div className="container">
         <form className="form-signin" onSubmit={this.onSubmit}>
+          {message !== "" && (
+            <div className="alert alert-warning alert-dismissible" role="alert">
+              {message}
+            </div>
+          )}
           <h2 className="form-signin-heading">Register</h2>
           <label for="inputEmail" className="sr-only">
             Email address
@@ -37,6 +47,7 @@ class Create extends Component {
           <input
             type="email"
             className="form-control"
+            id="inputEmail"
             placeholder="Email address"
             name="username"
             value={username}
@@ -49,6 +60,7 @@ class Create extends Component {
           <input
             type="password"
             class="form-control"
+            id="inputPassword"
             placeholder="Password"
             name="password"
             value={password}

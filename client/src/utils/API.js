@@ -35,7 +35,7 @@ export default {
     return axios.post("/api/auth/login", loginData);
   },
   //registers a new user into the database.
-  regsterSubmit: function(registerData) {
+  registerSubmit: function(registerData) {
     return axios.post("/api/auth/register", registerData);
   }
 };
