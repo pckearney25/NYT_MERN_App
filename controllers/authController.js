@@ -2,9 +2,9 @@ const db = require("../models");
 const settings = require("../config/settings");
 var jwt = require("jsonwebtoken");
 
-// Defining methods for the booksController
+// Defining methods for the authController
 module.exports = {
-  save: function(req, res) {
+  save: (req, res) => {
     if (!req.body.username || !req.body.password) {
       res.json({ success: false, msg: "Please pass username and password." });
     } else {
@@ -14,20 +14,20 @@ module.exports = {
         password: req.body.password
       });
       // save the user
-      newUser.save(function(err) {
+      newUser.save(err => {
         if (err) {
           return res.json({ success: false, msg: "Username already exists." });
         }
-        res.json({ success: true, msg: "Successful created new user." });
+        res.json({ success: true, msg: "Successfully created new user." });
       });
     }
   },
-  findOne: function(req, res) {
+  findOne: (req, res) => {
     db.User.findOne(
       {
         username: req.body.username
       },
-      function(err, user) {
+      (err, user) => {
         if (err) throw err;
 
         if (!user) {
@@ -37,7 +37,7 @@ module.exports = {
           });
         } else {
           //check if password matches
-          user.comparePassword(req.body.password, function(err, isMatch) {
+          user.comparePassword(req.body.password, (err, isMatch) => {
             if (isMatch && !err) {
               //if user is found and password is right create a token
               var token = jwt.sign(user.toJSON(), settings.secret);

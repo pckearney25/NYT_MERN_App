@@ -1,6 +1,6 @@
 const db = require("../models");
 
-getToken = function(headers) {
+getToken = headers => {
   if (headers && headers.authorization) {
     var parted = headers.authorization.split(" ");
     if (parted.length === 2) {
@@ -15,7 +15,7 @@ getToken = function(headers) {
 
 // Defining methods for the articlesController
 module.exports = {
-  findAll: function(req, res) {
+  findAll: (req, res) => {
     const token = getToken(req.headers);
     if (token) {
       db.Article.find(req.query)
@@ -26,7 +26,7 @@ module.exports = {
       return res.status(403).send({ success: false, msg: "Unauthorized." });
     }
   },
-  findById: function(req, res) {
+  findById: (req, res) => {
     const token = getToken(req.headers);
     if (token) {
       db.Article.findById(req.params.id)
@@ -36,7 +36,7 @@ module.exports = {
       return res.status(403).send({ success: false, msg: "Unauthorized." });
     }
   },
-  create: function(req, res) {
+  create: (req, res) => {
     const token = getToken(req.headers);
     if (token) {
       db.Article.create(req.body)
@@ -47,7 +47,7 @@ module.exports = {
     }
   },
 
-  remove: function(req, res) {
+  remove: (req, res) => {
     const token = getToken(req.headers);
     if (token) {
       console.log(req.params.id);

@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-var bcrypt = require("bcrypt-nodejs");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt-nodejs");
 
 const userSchema = new Schema({
   username: {
@@ -13,9 +13,9 @@ const userSchema = new Schema({
     required: true
   }
 });
-
+//Thes functions appear to break when rewritten in ES6.
 userSchema.pre("save", function(next) {
-  var user = this;
+  const user = this;
   if (this.isModified("password") || this.isNew) {
     bcrypt.genSalt(10, function(err, salt) {
       if (err) {
@@ -33,6 +33,7 @@ userSchema.pre("save", function(next) {
     return next();
   }
 });
+//Thes functions appear to break when rewritten in ES6.
 //Can you eliminate the ".methods"? NOPE!
 userSchema.methods.comparePassword = function(passw, cb) {
   bcrypt.compare(passw, this.password, function(err, isMatch) {
